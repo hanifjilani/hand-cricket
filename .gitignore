@@ -1,0 +1,66 @@
+# ---------------------------
+# ✅ Python general ignores
+# ---------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ---------------------------
+# ✅ Virtual environments
+# ---------------------------
+venv/
+.env/
+.env.bak/
+*.env
+
+# ---------------------------
+# ✅ Dataset and model files
+# ---------------------------
+dataset/
+*.jpg
+*.jpeg
+*.png
+*.pkl
+*.h5
+*.csv
+
+# ---------------------------
+# ✅ Streamlit configuration
+# ---------------------------
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# ---------------------------
+# ✅ Logs, cache, temp files
+# ---------------------------
+*.log
+*.pid
+*.tmp
+*.bak
+*.swp
+
+# ---------------------------
+# ✅ MediaPipe or ML cache
+# ---------------------------
+mediapipe_modules/
+
+# ---------------------------
+# ✅ IDE & system-specific
+# ---------------------------
+.vscode/
+.idea/
+.DS_Store
+
+# ---------------------------
+# ✅ GitHub Pages (optional)
+# ---------------------------
+# If using a separate 'docs/' folder to serve a site:
+# /docs/build/
+# /docs/.ipynb_checkpoints
+
+# ---------------------------
+# ✅ Optional backup
+# ---------------------------
+*.gz
+*.tar
+*.zip
