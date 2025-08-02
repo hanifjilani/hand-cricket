@@ -20,7 +20,6 @@ dataset/
 *.jpg
 *.jpeg
 *.png
-*.pkl
 *.h5
 *.csv
 
