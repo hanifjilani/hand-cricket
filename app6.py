@@ -19,29 +19,89 @@ st.set_page_config(page_title="Hand Cricket ML", page_icon="🏏", layout="wide"
 # CSS for styling
 st.markdown("""
 <style>
-body {
-    background: linear-gradient(135deg, #fceabb, #f8b500);
-    margin: 0;
-    padding: 0;
-}
+/* 🏏 Game Title */
 .title {
     text-align: center;
     font-size: 48px;
     font-weight: 800;
-    font-family: 'Segoe UI', sans-serif;
     margin-top: 30px;
+    font-family: 'Poppins', sans-serif;
 }
+
+/* 🎮 Subtitle */
 .subtitle {
     text-align: center;
     font-size: 20px;
-    color: #444;
     font-style: italic;
+    color: #444;
     margin-top: -10px;
     margin-bottom: 20px;
-    font-family: 'Segoe UI', sans-serif;
+}
+
+/* 🧢 Scoreboard */
+.scoreboard {
+    text-align: center;
+    font-size: 22px;
+    padding: 8px;
+    border-radius: 12px;
+    background-color: #ffffffaa;
+    margin-top: 10px;
+}
+
+/* 🧩 Run Floating Animation */
+@keyframes floatup {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-30px); }
+}
+.run-animation {
+  animation: floatup 0.5s ease-out;
+  font-size: 24px;
+  color: #00a86b;
+  text-align: center;
+}
+
+/* 🔥 Bowling Text Animation */
+@keyframes bowl {
+  0% { transform: translateX(100px) scale(0.5); opacity: 0; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
+}
+.bowl-animation {
+  animation: bowl 0.5s ease-out;
+  font-size: 26px;
+  text-align: center;
+}
+
+/* ⚖️ Column Divider */
+.divider {
+  border-left: 3px dashed #ccc;
+  height: 100%;
+  margin: 0 20px;
+}
+            
+.card {
+    background-color: #ffffffcc; /* semi-transparent white */
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02); /* subtle hover effect */
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    color: #333;
 }
 </style>
 
+<!-- 🏏 Game Heading -->
 <div class="main">
     <h1 class="title">🤚🏏 Hand Cricket Game - ML Edition</h1>
     <p class="subtitle">Play your favorite childhood game using the power of AI 🎯</p>
@@ -84,20 +144,28 @@ def play_turn(player_num):
     else:
         if st.session_state.batting == "player":
             st.session_state.player_score += player_num
+            # st.markdown(f"<div class='run-animation'>+{player_num} runs!</div>", unsafe_allow_html=True)
         elif st.session_state.batting == "bot":
             st.session_state.bot_score += bot_num
 
 def update_score():
-    player_score_placeholder.metric("Your Score", st.session_state.player_score)
+    player_score_placeholder.metric("Your Score", st.session_state.player_score, border=True, width="content")
     bot_hand_image = Image.open(f"bot_hands/{2}.png")
     bot_image_placeholder.image(bot_hand_image, caption=f"🤖 Bot showed: {st.session_state.last_bot_num}", width=300)
+    if st.session_state.last_player_num:
+        player_prediction_placeholder.markdown(
+            f"<div class='run-animation'>+{st.session_state.last_player_num} runs!</div>", unsafe_allow_html=True
+        )
 
 # Empty space
 st.text("")
 st.text("")
 
-# Layout: Left space | Player | Bot
-left_space, col1, col2 = st.columns([0.4, 1, 1], gap="medium")
+# Button Layouts: Start Game | Stop Game | Rules
+
+
+# Layout: Player | Bot
+col1, col2 = st.columns([1, 1], gap="large", border=True)
 
 with col1:
     if st.button("🎮 Start Game"):
@@ -109,11 +177,10 @@ with col1:
     player_prediction_placeholder = st.empty()
     player_score_placeholder = st.empty()
 
-    if st.session_state.last_player_num:
-        player_prediction_placeholder.markdown(
-            f"<h3 style='color:green;'>🧠 You showed: {st.session_state.last_player_num}</h3>",
-            unsafe_allow_html=True
-        )
+    # if st.session_state.last_player_num:
+    #     player_prediction_placeholder.markdown(
+    #         st.markdown(f"<div class='run-animation'><h4>+{st.session_state.last_player_num} runs!</h4></div>", unsafe_allow_html=True)
+    #     )
 
     player_score_placeholder.metric("Your Score", st.session_state.player_score)
 
