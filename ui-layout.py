@@ -50,7 +50,7 @@ st.markdown("""
     margin-bottom: 20px;
     transition: transform 0.2s;
 }
-[data-testid="stColumn"] {
+.st-emotion-cache-zbekoy {
     position: relative;
     z-index: 10;
     max-width: 80rem;
@@ -58,17 +58,17 @@ st.markdown("""
     border-radius: .5rem;
     overflow: hidden;
     background-color: rgba(255, 255, 255, 0.9); /* optional soft background */
-    box-shadow: 0 0 40px rgba(255, 145, 0, 0.2); /* 🟠 soft orange glow */
+    box-shadow: 0 0 30px rgba(255, 145, 0, 0.3); /* 🟠 soft orange glow */
     transition: 
         transform 0.2s ease,
         background-color 0.2s ease,
         box-shadow 0.2s ease
 }
 
-[data-testid="stColumn"]:hover {
+.st-emotion-cache-zbekoy:hover {
     transform: scale(1.02);
     background-color: rgba(255, 245, 235, 0.3);
-    box-shadow: 0 0 50px rgba(255, 120, 0, 0.3);  /* slightly deeper glow */
+    box-shadow: 0 0 40px rgba(255, 120, 0, 0.35);  /* slightly deeper glow */
 }
 
 .card-title {
@@ -77,7 +77,7 @@ st.markdown("""
     margin-bottom: 15px;
     text-align: center;
     color: #333;
-}
+}      
 </style>
 
 <!-- 🏏 Game Heading -->
@@ -118,13 +118,34 @@ if "running" not in st.session_state:
 # Button Layouts: Start Game | Stop Game | Rules
 # Icons: 🎮 
 
+# Layout Start Game | Stop Game | Rules | Detection Feedback
+left_space, col1_btn, col2_btn, col3_btn, col4_btn, right_space = st.columns(6, gap="small", border=False)
+
+with col1_btn:
+    if st.button("Start Game", icon=':material/play_circle:'):
+        st.session_state.running = True
+        st.session_state.last_capture_time = time.monotonic()
+with col2_btn:
+    if st.button("Stop Game", icon=':material/stop_circle:'):
+        st.session_state.running = False
+with col3_btn:
+    if st.button("Game Rules", icon=":material/gamepad:"):
+        st.warning("Work in progress!")
+with col4_btn:
+    if st.button("Detection Feedback", icon=":material/rate_review:"):
+        st.switch_page("pages/feedback.py")
+
+# Empty Space
+st.text("")
+st.text("")
+
 # Layout: Player | Bot
 col1, col2 = st.columns([1, 1], gap="large", border=True)
 
 with col1:
-    if st.button("Start Game", icon=':material/play_circle:'):
-        st.session_state.running = True
-        st.session_state.last_capture_time = time.monotonic()
+    # if st.button("Start Game", icon=':material/play_circle:'):
+    #     st.session_state.running = True
+    #     st.session_state.last_capture_time = time.monotonic()
 
     st.subheader(":orange[:material/person:] Player")
     player_video_placeholder = st.empty()
@@ -139,8 +160,8 @@ with col1:
     player_score_placeholder.metric("Your Score", st.session_state.player_score)
 
 with col2:
-    if st.button("Stop Game", icon=':material/stop_circle:'):
-        st.session_state.running = False
+    # if st.button("Stop Game", icon=':material/stop_circle:'):
+    #     st.session_state.running = False
 
     st.subheader(":orange[:material/robot_2:] Bot")
     bot_image_placeholder = st.empty()
@@ -190,7 +211,7 @@ if st.session_state.running:
 
             player_video_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
             time.sleep(0.5)
-
+            st.session_state.last_capture_time = time.monotonic()
         # player_video_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
 
         if st.session_state.batting == "end":
