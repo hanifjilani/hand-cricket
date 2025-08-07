@@ -17,12 +17,11 @@ venv/
 # ✅ Dataset and model files
 # ---------------------------
 dataset/
-*.jpg
-*.jpeg
-*.png
-*.h5
-*.csv
-
+dataset/*.jpg
+dataset/*.jpeg
+dataset/*.png
+dataset/*.h5
+dataset/*.csv
 # ---------------------------
 # ✅ Streamlit configuration
 # ---------------------------
