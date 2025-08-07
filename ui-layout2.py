@@ -195,10 +195,10 @@ def predict(frame):
             return clf.predict(data)[0]
     return None
 # Game Logic
-def play_turn(player_num):
-    bot_num = np.random.randint(1, 2)
-    bot_hand_image = Image.open(f"bot_hands/{2}.png")
-    bot_image_placeholder.image(bot_hand_image, caption=f"🤖 Bot showed: {st.session_state.last_bot_num}", width=300)
+def play_turn(player_num, bot_num):
+    # bot_num = np.random.randint(1, 11)
+    # bot_hand_image = Image.open(f"bot_hands/{bot_num}.png")
+    # bot_image_placeholder.image(bot_hand_image)
     st.session_state.last_player_num = player_num
     st.session_state.last_bot_num = bot_num
 
@@ -215,14 +215,15 @@ def play_turn(player_num):
     else:
         if player_num == bot_num:
             st.session_state.out = True
+            st.session_state.batting = "end"
             if st.session_state.player_score == st.session_state.bot_score:
                 st.warning("TIE TIE !!")
-                show_result_screen("TIE TIE !!")
+                show_result_screen("MATCH TIED!")
                 time.sleep(2.5)
                 remove_overlay()
             else:
                 st.warning("Bot Out! You Win!")
-                show_result_screen("YOU WIN! BOT OUT!")
+                show_result_screen("MATCH SEALED! VICTORY IS YOURS!")
                 time.sleep(2.5)
                 remove_overlay()
         else:
@@ -230,8 +231,9 @@ def play_turn(player_num):
 
         if st.session_state.player_score < st.session_state.bot_score:
             st.session_state.out = True
+            st.session_state.batting = "end"
             st.warning("Bot Wins! You lost!")
-            show_result_screen("Bot Wins! You lost!")
+            show_result_screen("ALL OUT! BOT TAKES IT!")
             time.sleep(2.5)
             remove_overlay()
 
@@ -262,9 +264,9 @@ def update_score():
     
 
 
-# Empty space
+# # Empty space
 st.text("")
-st.text("")
+# st.text("")
 
 
 # .Hero_dashboardContainer__fbpgV {
@@ -317,9 +319,9 @@ with col4_btn:
     if st.button("Detection Feedback", icon=":material/rate_review:"):
         st.switch_page("pages/feedback.py")
 
-# Empty Space
+# # Empty Space
 st.text("")
-st.text("")
+# st.text("")
 
 # Layout: Player | Bot
 col1, col2 = st.columns([1, 1], gap="large", border=True)
@@ -331,10 +333,11 @@ with col1:
     player_hand_error = st.empty()
     player_video_placeholder = st.empty()
     player_message_placeholder = st.empty()
-    a, b = st.columns(2)
+    a, b = st.columns(2, vertical_alignment='center')
     with a:
         player_score_placeholder = st.empty()
-    button_placeholder = st.empty()
+    with b:
+        button_placeholder = st.empty()
 
 with col2:
     st.subheader(":orange[:material/robot_2:] Bot")
@@ -346,8 +349,9 @@ with col2:
     with c:
         bot_score_placeholder = st.empty()
 if st.session_state.batting == "bot":
-    overlay_image = Image.open(f"overlays/start_bowling.png")
+    overlay_image = Image.open(f"overlays/start_bowling2.png")
     player_video_placeholder.image(overlay_image)
+    player_score_placeholder.metric("Total Runs", value=f"{st.session_state.player_score} Runs",border=True)
     if button_placeholder.button("Start Bowling", icon=":material/sports_cricket:"):
         st.session_state.running = True
         st.session_state.frame_count = 0
@@ -356,9 +360,11 @@ if st.session_state.batting == "bot":
         st.session_state.last_player_num = None
         st.session_state.last_bot_num = None
         st.session_state.last_capture_time = time.monotonic()
+        # Badge Fixing for batting and bowling
+        player_badge.badge(":material/sports_baseball: Bowling", color="red")
+        bot_badge.badge(":material/sports_cricket: Batting", color="green")
         button_placeholder.empty()
         # st.rerun()
-
 
 # Webcam logic
 if st.session_state.running:
@@ -396,11 +402,14 @@ if st.session_state.running:
             # cv2.rectangle(frame, (100, 20), (115, 35), (0, 255, 255), -1)  # Yellow flash (BGR)
 
             player_video_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
+            bot_num = np.random.randint(1, 11)
+            bot_hand_image = Image.open(f"bot_hands/{bot_num}.png")
             time.sleep(0.5)
+            bot_image_placeholder.image(bot_hand_image)
             player_num = predict(frame)
             if player_num:
                 player_hand_error.empty()
-                play_turn(player_num)
+                play_turn(player_num, bot_num)
                 update_score()
             else:
                 player_hand_error.error(":material/hand_gesture: Couldn't detect hand")
@@ -414,15 +423,29 @@ if st.session_state.running:
     cap.release()
     cv2.destroyAllWindows()
 
-# Game End Results
 if st.session_state.batting == "end":
-    st.markdown("---")
-    if st.session_state.player_score > st.session_state.bot_score:
-        st.success("🎉 You Won!")
-    elif st.session_state.player_score < st.session_state.bot_score:
-        st.error("😢 Bot Won!")
-    else:
-        st.warning("🤝 It's a Tie!")
-    if st.button("🔁 Play Again"):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
+    if button_placeholder.button("Play Again"):
+        st.session_state.running = True
+        st.session_state.frame_count = 0
+        st.session_state.player_score = 0
+        st.session_state.bot_score = 0
+        st.session_state.batting = "player"
+        st.session_state.out = False
+        st.session_state.last_player_num = None
+        st.session_state.last_bot_num = None
+        st.session_state.last_capture_time = time.monotonic()
+        st.rerun()
+
+
+# # Game End Results
+# if st.session_state.batting == "end":
+#     st.markdown("---")
+#     if st.session_state.player_score > st.session_state.bot_score:
+#         st.success("🎉 You Won!")
+#     elif st.session_state.player_score < st.session_state.bot_score:
+#         st.error("😢 Bot Won!")
+#     else:
+#         st.warning("🤝 It's a Tie!")
+#     if st.button("🔁 Play Again"):
+#         for key in list(st.session_state.keys()):
+#             del st.session_state[key]
