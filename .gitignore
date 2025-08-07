@@ -27,7 +27,6 @@ dataset/
 # ✅ Streamlit configuration
 # ---------------------------
 .streamlit/secrets.toml
-.streamlit/config.toml
 
 # ---------------------------
 # ✅ Logs, cache, temp files

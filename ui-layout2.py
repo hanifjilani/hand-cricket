@@ -94,15 +94,21 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Entire screen overlay
+# Placeholders
+overlay_show = st.empty()
+overlay_remove = st.empty()
 
 def show_result_screen(result="WIN! 🎉"):
-    st.markdown(
+    # Entry + base styles
+    overlay_show.markdown(
         f"""
         <style>
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
         .overlay {{
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
             position: fixed;
             top: 0; left: 0;
             width: 100vw;
@@ -113,7 +119,7 @@ def show_result_screen(result="WIN! 🎉"):
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: fadeIn 0.2s ease-in-out;
         }}
 
         .result-text {{
@@ -144,24 +150,38 @@ def show_result_screen(result="WIN! 🎉"):
         """,
         unsafe_allow_html=True
     )
+
 def remove_overlay():
-    st.markdown(
-        f""" 
+    # Only update CSS to trigger exit animation
+    overlay_remove.markdown(
+        """
         <style>
-         @keyframes exitFade {{
-            0% {{ opacity: 1; transform: translateY(0); }}
-            100% {{ opacity: 0; transform: translateY(-20px); }}
-        }}
-        .overlay {{
-            animation: exitFade 0.6s ease forwards;
-             opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }}
+        @keyframes exitFade {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+        .overlay {
+            animation: exitFade 0.6s ease forwards !important;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
+    time.sleep(0.6)
+    overlay_remove.markdown(
+      """
+        <style>
+        .overlay {
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True  
+    )
+    # overlay_show.empty()
+    # overlay_remove.empty()
 
 
 # Prediction function
@@ -174,18 +194,20 @@ def predict(frame):
             data = np.array([[lm.x, lm.y, lm.z] for lm in landmarks.landmark]).flatten().reshape(1, -1)
             return clf.predict(data)[0]
     return None
-
 # Game Logic
 def play_turn(player_num):
     bot_num = np.random.randint(1, 2)
+    bot_hand_image = Image.open(f"bot_hands/{2}.png")
+    bot_image_placeholder.image(bot_hand_image, caption=f"🤖 Bot showed: {st.session_state.last_bot_num}", width=300)
     st.session_state.last_player_num = player_num
     st.session_state.last_bot_num = bot_num
+
     if st.session_state.batting == "player":
         if player_num == bot_num:
             st.session_state.out = True
-            # st.warning(f"🏏 OUT! Final Score: {st.session_state.player_score}")
+            st.warning(f"🏏 OUT! Final Score: {st.session_state.player_score}")
             # st.session_state.batting = "bot" if st.session_state.batting == "player" else "end"
-            show_result_screen("🏏 OUT!")
+            show_result_screen("🏏 PLAYER OUT!")
             time.sleep(2.5)
             remove_overlay()
         else:
@@ -193,64 +215,52 @@ def play_turn(player_num):
     else:
         if player_num == bot_num:
             st.session_state.out = True
-            show_result_screen("🏏 WIN!")
-            time.sleep(2.5)
-            remove_overlay()
-            if button_placeholder.button("Play Again", icon=':material/sports_baseball:'):
-                st.session_state.running = False
-                st.session_state.last_capture_time = 0
-                st.session_state.frame_count = 0
-                st.session_state.player_score = 0
-                st.session_state.bot_score = 0
-                st.session_state.batting = "player"
-                st.session_state.out = False
-                st.session_state.last_player_num = None
-                st.session_state.last_bot_num = None
-        elif st.session_state.player_score < st.session_state.bot_score + bot_num:
-            # Lost
-            st.session_state.out = True
-            show_result_screen("🏏 LOST!")
-            time.sleep(2.5)
-            remove_overlay()
-            if button_placeholder.button("Play Again", icon=':material/sports_baseball:'):
-                st.session_state.running = False
-                st.session_state.last_capture_time = 0
-                st.session_state.frame_count = 0
-                st.session_state.player_score = 0
-                st.session_state.bot_score = 0
-                st.session_state.batting = "player"
-                st.session_state.out = False
-                st.session_state.last_player_num = None
-                st.session_state.last_bot_num = None
+            if st.session_state.player_score == st.session_state.bot_score:
+                st.warning("TIE TIE !!")
+                show_result_screen("TIE TIE !!")
+                time.sleep(2.5)
+                remove_overlay()
+            else:
+                st.warning("Bot Out! You Win!")
+                show_result_screen("YOU WIN! BOT OUT!")
+                time.sleep(2.5)
+                remove_overlay()
         else:
             st.session_state.bot_score += bot_num
 
+        if st.session_state.player_score < st.session_state.bot_score:
+            st.session_state.out = True
+            st.warning("Bot Wins! You lost!")
+            show_result_screen("Bot Wins! You lost!")
+            time.sleep(2.5)
+            remove_overlay()
 
-# Score Updation
 def update_score():
-    if st.session_state.out and st.session_state.batting == "player":
-        player_score_placeholder.metric("Final Runs", value=f"{st.session_state.player_score} Runs",border=True)
-        if button_placeholder.button("Start Bowling", icon=':material/sports_baseball:'):
-                st.session_state.running = True
-                st.session_state.last_capture_time = time.monotonic()
-                st.session_state.batting = "player"
-                st.session_state.out = False
-    else:
-        player_score_placeholder.metric("Your Runs", value=f"{st.session_state.player_score} Runs", delta=int(st.session_state.last_player_num),border=True)
-    bot_hand_image = Image.open(f"bot_hands/{2}.png")
-    bot_image_placeholder.image(bot_hand_image, caption=f"🤖 Bot showed: {st.session_state.last_bot_num}", width=300)
-    if st.session_state.batting == "bot":
-        bot_score_placeholder.metric("Bot Runs", value=f"{st.session_state.bot_score} / {st.session_state.player_score} Runs", delta=int(st.session_state.last_bot_num),border=True)
-    # if st.session_state.out and st.session_state.batting == "player":
-    #     if start_bowling_button.button("Start Bowling", icon=':material/sports_baseball:'):
-    #         st.session_state.running = True
-    #         st.session_state.out = False
-    #         st.session_state.last_capture_time = time.monotonic()
+    # if st.session_state.out:
+    #     if st.session_state.batting == "player":
+    #         player_score_placeholder.metric("Total Runs", value=f"{st.session_state.player_score} Runs",border=True)
     #         st.session_state.batting = "bot"
-    # if st.session_state.last_player_num:
-    #     player_prediction_placeholder.markdown(
-    #         f"<div class='run-animation'>+{st.session_state.last_player_num} runs!</div>", unsafe_allow_html=True
-    #     )
+    #         st.rerun()
+    #     else:
+    #         bot_score_placeholder.metric("Bot Runs", value=f"{st.session_state.bot_score} / {st.session_state.player_score} Runs", delta=int(st.session_state.last_bot_num),border=True)
+    # else:
+    #     if st.session_state.batting == "player":
+    #         player_score_placeholder.metric("Your Runs", value=f"{st.session_state.player_score} Runs", delta=int(st.session_state.last_player_num),border=True)
+    #     else:
+    #         bot_score_placeholder.metric("Bot Runs", value=f"{st.session_state.bot_score} / {st.session_state.player_score} Runs", delta=int(st.session_state.last_bot_num),border=True)
+        
+    if st.session_state.out and st.session_state.batting == "player":
+        player_score_placeholder.metric("Total Runs", value=f"{st.session_state.player_score} Runs",border=True)
+        st.session_state.batting = "bot"
+        st.rerun()
+    elif st.session_state.batting == "player":
+        player_score_placeholder.metric("Your Runs", value=f"{st.session_state.player_score} Runs", delta=int(st.session_state.last_player_num),border=True)
+    else:
+        bot_score_placeholder.metric("Bot Runs", value=f"{st.session_state.bot_score} / {st.session_state.player_score} Runs", delta=int(st.session_state.last_bot_num),border=True)
+        player_score_placeholder.metric("Your Move", value=f"{st.session_state.last_player_num}",border=True)
+
+    
+
 
 # Empty space
 st.text("")
@@ -289,8 +299,13 @@ left_space, col1_btn, col2_btn, col3_btn, col4_btn, right_space = st.columns(6, 
 with col1_btn:
     if st.button("Start New Game", icon=':material/play_circle:'):
         st.session_state.running = True
-        st.session_state.out = False
+        st.session_state.frame_count = 0
+        st.session_state.player_score = 0
+        st.session_state.bot_score = 0
         st.session_state.batting = "player"
+        st.session_state.out = False
+        st.session_state.last_player_num = None
+        st.session_state.last_bot_num = None
         st.session_state.last_capture_time = time.monotonic()
 with col2_btn:
     if st.button("Stop Game", icon=':material/stop_circle:'):
@@ -315,12 +330,11 @@ with col1:
     player_badge.badge(":material/sports_cricket: Batting", color="green")
     player_hand_error = st.empty()
     player_video_placeholder = st.empty()
+    player_message_placeholder = st.empty()
     a, b = st.columns(2)
     with a:
         player_score_placeholder = st.empty()
-    with b:
-        button_placeholder = st.empty()
-    
+    button_placeholder = st.empty()
 
 with col2:
     st.subheader(":orange[:material/robot_2:] Bot")
@@ -328,15 +342,23 @@ with col2:
     bot_badge.badge(":material/sports_baseball: Bowling", color="red")
     bot_image_placeholder = st.empty()
     bot_score_placeholder = st.empty()
-    # if st.session_state.last_bot_num:
-    #     bot_move_placeholder.markdown(
-    #         f"<h2 style='color:#FF5733;'>🤖 Bot showed: <b>{st.session_state.last_bot_num}</b></h2>",
-    #         unsafe_allow_html=True
-    #     )
     c, d = st.columns(2)
     with c:
         bot_score_placeholder = st.empty()
-    # st.metric("Bot Score", st.session_state.bot_score)
+if st.session_state.batting == "bot":
+    overlay_image = Image.open(f"overlays/start_bowling.png")
+    player_video_placeholder.image(overlay_image)
+    if button_placeholder.button("Start Bowling", icon=":material/sports_cricket:"):
+        st.session_state.running = True
+        st.session_state.frame_count = 0
+        st.session_state.bot_score = 0
+        st.session_state.out = False
+        st.session_state.last_player_num = None
+        st.session_state.last_bot_num = None
+        st.session_state.last_capture_time = time.monotonic()
+        button_placeholder.empty()
+        # st.rerun()
+
 
 # Webcam logic
 if st.session_state.running:
