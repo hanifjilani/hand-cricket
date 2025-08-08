@@ -236,7 +236,7 @@ def share_modal(result_type, player_score, bot_score):
         overlay_img = None
 
     # Compose share message and encode it
-    game_link = "https://your-streamlit-app-link.com"  # Change this to your deployed app URL
+    game_link = "https://handcricketml.streamlit.app/"  # Change this to your deployed app URL
     share_msg = (
     f"🏏 Just wrapped up an epic Hand Cricket showdown!\n"
     f"I smashed {player_score} runs against the bot’s {bot_score}.\n\n"
