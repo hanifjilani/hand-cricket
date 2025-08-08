@@ -376,7 +376,7 @@ if st.session_state.running:
             break
 
         # player_video_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
-
+        frame = cv2.flip(frame, 1)
         elapsed = time.monotonic() - st.session_state.last_capture_time
         remaining = 3 - int(elapsed)
 
