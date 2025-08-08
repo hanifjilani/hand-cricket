@@ -108,6 +108,8 @@ with col1:
 
 with col2:
     st.markdown("### Controls")
+    if st.button("Go back to Hand Cricket Game", icon=":material/sports_cricket:"):
+        st.switch_page("app.py")
     if ctx.video_processor:
         if st.button("📸 Capture Frame"):
             st.session_state.last_frame = ctx.video_processor.frame

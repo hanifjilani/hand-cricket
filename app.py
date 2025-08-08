@@ -4,6 +4,7 @@ import mediapipe as mp
 import time
 import joblib
 import numpy as np
+import os
 from PIL import Image
 
 # Load model
@@ -180,9 +181,34 @@ def remove_overlay():
         """,
         unsafe_allow_html=True  
     )
-    # overlay_show.empty()
-    # overlay_remove.empty()
 
+# Game Rules Modal
+@st.dialog("🏏 Hand Cricket Rules")
+def show_game_rules():
+    st.markdown(
+        """
+        **Ready to take on the bot? Here's how it works:**
+        
+        :orange[:material/sports_cricket:] You **bat first** — show a hand signal (1-10 fingers) each turn.  
+        :orange[:material/sports_baseball:] The bot bowls — if your number matches the bot's, you're **OUT**.   
+        :orange[:material/leaderboard:] If they don't match → your number is added to your score.  
+        :orange[:material/change_circle:] After batting, click **Start Bowling** to switch roles.  
+        :orange[:material/rewarded_ads:] Try to beat the bot's score!
+
+        :orange[:material/trophy:] *Play smart. Outsmart the bot. Claim victory!*
+        """
+    )
+
+    # Hand sign images
+    st.markdown("### :orange[:material/hand_gesture:] Hand Signs (1-10)")
+    cols = st.columns(3)  # 3 rows of 4
+    img_files = sorted(
+        [f for f in os.listdir("bot_hands") if f.endswith(".png")],
+        key=lambda x: int(x.split(".")[0])
+    )
+    for idx, img in enumerate(img_files):
+        with cols[idx % 3]:
+            st.image(f"bot_hands/{img}", caption=img.split(".")[0], use_container_width=True)
 
 # Prediction function
 def predict(frame):
@@ -205,7 +231,7 @@ def play_turn(player_num, bot_num):
     if st.session_state.batting == "player":
         if player_num == bot_num:
             st.session_state.out = True
-            st.warning(f"🏏 OUT! Final Score: {st.session_state.player_score}")
+            # st.warning(f"🏏 OUT! Final Score: {st.session_state.player_score}")
             # st.session_state.batting = "bot" if st.session_state.batting == "player" else "end"
             show_result_screen("🏏 PLAYER OUT!")
             time.sleep(2.5)
@@ -217,12 +243,16 @@ def play_turn(player_num, bot_num):
             st.session_state.out = True
             st.session_state.batting = "end"
             if st.session_state.player_score == st.session_state.bot_score:
-                st.warning("TIE TIE !!")
+                # st.warning("TIE TIE !!")
+                overlay_image = Image.open(f"overlays/tied.png")
+                player_video_placeholder.image(overlay_image)
                 show_result_screen("MATCH TIED!")
                 time.sleep(2.5)
                 remove_overlay()
             else:
-                st.warning("Bot Out! You Win!")
+                # st.warning("Bot Out! You Win!")
+                overlay_image = Image.open(f"overlays/win.png")
+                player_video_placeholder.image(overlay_image)
                 show_result_screen("MATCH SEALED! VICTORY IS YOURS!")
                 time.sleep(2.5)
                 remove_overlay()
@@ -232,25 +262,14 @@ def play_turn(player_num, bot_num):
         if st.session_state.player_score < st.session_state.bot_score:
             st.session_state.out = True
             st.session_state.batting = "end"
-            st.warning("Bot Wins! You lost!")
+            # st.warning("Bot Wins! You lost!")
+            overlay_image = Image.open(f"overlays/lost.png")
+            player_video_placeholder.image(overlay_image)
             show_result_screen("ALL OUT! BOT TAKES IT!")
             time.sleep(2.5)
             remove_overlay()
 
 def update_score():
-    # if st.session_state.out:
-    #     if st.session_state.batting == "player":
-    #         player_score_placeholder.metric("Total Runs", value=f"{st.session_state.player_score} Runs",border=True)
-    #         st.session_state.batting = "bot"
-    #         st.rerun()
-    #     else:
-    #         bot_score_placeholder.metric("Bot Runs", value=f"{st.session_state.bot_score} / {st.session_state.player_score} Runs", delta=int(st.session_state.last_bot_num),border=True)
-    # else:
-    #     if st.session_state.batting == "player":
-    #         player_score_placeholder.metric("Your Runs", value=f"{st.session_state.player_score} Runs", delta=int(st.session_state.last_player_num),border=True)
-    #     else:
-    #         bot_score_placeholder.metric("Bot Runs", value=f"{st.session_state.bot_score} / {st.session_state.player_score} Runs", delta=int(st.session_state.last_bot_num),border=True)
-        
     if st.session_state.out and st.session_state.batting == "player":
         player_score_placeholder.metric("Total Runs", value=f"{st.session_state.player_score} Runs",border=True)
         st.session_state.batting = "bot"
@@ -268,18 +287,6 @@ def update_score():
 st.text("")
 # st.text("")
 
-
-# .Hero_dashboardContainer__fbpgV {
-#     position: relative;
-#     z-index: 10;
-#     max-width: 80rem;
-#     margin: 0 auto;
-#     border-radius: .5rem;
-#     overflow: hidden;
-#     box-shadow: 0 0 50px rgba(248, 180, 4, .2);
-# }
-
-
 # Game State
 if "running" not in st.session_state:
     st.session_state.running = False
@@ -294,6 +301,9 @@ if "running" not in st.session_state:
 
 # Button Layouts: Start Game | Stop Game | Rules
 # Icons: 🎮 
+if "seen_rules_hint" not in st.session_state:
+    st.info("💡 First time here? Click **Game Rules** before you start playing! 🏏")
+    st.session_state.seen_rules_hint = True
 
 # Layout Start Game | Stop Game | Rules | Detection Feedback
 left_space, col1_btn, col2_btn, col3_btn, col4_btn, right_space = st.columns(6, gap="small", border=False)
@@ -314,7 +324,7 @@ with col2_btn:
         st.session_state.running = False
 with col3_btn:
     if st.button("Game Rules", icon=":material/gamepad:"):
-        st.warning("Work in progress!")
+        show_game_rules()
 with col4_btn:
     if st.button("Detection Feedback", icon=":material/rate_review:"):
         st.switch_page("pages/feedback.py")
@@ -404,8 +414,8 @@ if st.session_state.running:
             player_video_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
             bot_num = np.random.randint(1, 11)
             bot_hand_image = Image.open(f"bot_hands/{bot_num}.png")
-            time.sleep(0.5)
             bot_image_placeholder.image(bot_hand_image)
+            time.sleep(0.5)
             player_num = predict(frame)
             if player_num:
                 player_hand_error.empty()
@@ -435,17 +445,3 @@ if st.session_state.batting == "end":
         st.session_state.last_bot_num = None
         st.session_state.last_capture_time = time.monotonic()
         st.rerun()
-
-
-# # Game End Results
-# if st.session_state.batting == "end":
-#     st.markdown("---")
-#     if st.session_state.player_score > st.session_state.bot_score:
-#         st.success("🎉 You Won!")
-#     elif st.session_state.player_score < st.session_state.bot_score:
-#         st.error("😢 Bot Won!")
-#     else:
-#         st.warning("🤝 It's a Tie!")
-#     if st.button("🔁 Play Again"):
-#         for key in list(st.session_state.keys()):
-#             del st.session_state[key]
