@@ -5,6 +5,7 @@ import time
 import joblib
 import numpy as np
 import os
+import urllib.parse
 from PIL import Image
 
 # Load model
@@ -210,6 +211,77 @@ def show_game_rules():
         with cols[idx % 3]:
             st.image(f"bot_hands/{img}", caption=img.split(".")[0], use_container_width=True)
 
+
+# Dialog with overlay, score, and share buttons
+@st.dialog("Game Result")
+def share_modal(result_type, player_score, bot_score):
+    # Map result to overlay image path and message text
+    overlay_images = {
+        "win": "overlays/win.png",
+        "lose": "overlays/lost.png",
+        "tie": "overlays/tied.png"
+    }
+
+    result_messages = {
+        "win": "🏆 MATCH SEALED! VICTORY IS YOURS!",
+        "lose": "😞 ALL OUT! BOT TAKES IT!",
+        "tie": "🤝 It's a Tie! Well played!"
+    }
+
+    # Load overlay image (handle file errors gracefully)
+    try:
+        overlay_img = Image.open(overlay_images.get(result_type, "overlays/tie.png"))
+    except Exception as e:
+        st.error(f"Error loading overlay image: {e}")
+        overlay_img = None
+
+    # Compose share message and encode it
+    game_link = "https://your-streamlit-app-link.com"  # Change this to your deployed app URL
+    share_msg = (
+    f"🏏 Just wrapped up an epic Hand Cricket showdown!\n"
+    f"I smashed {player_score} runs against the bot’s {bot_score}.\n\n"
+    f"{result_messages[result_type]} 🏆\n\n"
+    f"Think you’ve got what it takes to outplay me?\n"
+    f"Grab your bat, show your hand, and beat my score!\n\n"
+    f"🎮 Play now and join the cricket frenzy: {game_link}"
+)
+    encoded_msg = urllib.parse.quote(share_msg)
+
+    whatsapp_url = f"https://api.whatsapp.com/send?text={encoded_msg}"
+    twitter_url = f"https://twitter.com/intent/tweet?text={encoded_msg}"
+
+    if overlay_img:
+        st.image(overlay_img, use_container_width=True)
+    st.markdown(f"### {result_messages[result_type]}")
+    st.markdown(f"**Your Score:** {player_score} runs  |  **Bot Score:** {bot_score} runs")
+    st.markdown("---")
+    st.markdown("### 📢 Share your result with friends!")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(
+            f"""
+            <a href="{whatsapp_url}" target="_blank">
+                <button style="background-color:#25D366;color:white;padding:10px;border:none;border-radius:5px;cursor:pointer;">
+                    📱 Share on WhatsApp
+                </button>
+            </a>
+            """,
+            unsafe_allow_html=True,
+        )
+    with col2:
+        st.markdown(
+            f"""
+            <a href="{twitter_url}" target="_blank">
+                <button style="background-color:#1DA1F2;color:white;padding:10px;border:none;border-radius:5px;cursor:pointer;">
+                    🐦 Share on Twitter
+                </button>
+            </a>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
+
 # Prediction function
 def predict(frame):
     with mp_hands.Hands(static_image_mode=False, max_num_hands=1) as hands:
@@ -249,6 +321,7 @@ def play_turn(player_num, bot_num):
                 show_result_screen("MATCH TIED!")
                 time.sleep(2.5)
                 remove_overlay()
+                share_modal("tie", st.session_state.player_score, st.session_state.bot_score)
             else:
                 # st.warning("Bot Out! You Win!")
                 overlay_image = Image.open(f"overlays/win.png")
@@ -256,6 +329,7 @@ def play_turn(player_num, bot_num):
                 show_result_screen("MATCH SEALED! VICTORY IS YOURS!")
                 time.sleep(2.5)
                 remove_overlay()
+                share_modal("win", st.session_state.player_score, st.session_state.bot_score)
         else:
             st.session_state.bot_score += bot_num
 
@@ -268,6 +342,7 @@ def play_turn(player_num, bot_num):
             show_result_screen("ALL OUT! BOT TAKES IT!")
             time.sleep(2.5)
             remove_overlay()
+            share_modal("lose", st.session_state.player_score, st.session_state.bot_score)
 
 def update_score():
     if st.session_state.out and st.session_state.batting == "player":
@@ -301,9 +376,9 @@ if "running" not in st.session_state:
 
 # Button Layouts: Start Game | Stop Game | Rules
 # Icons: 🎮 
-if "seen_rules_hint" not in st.session_state:
-    st.info("💡 First time here? Click **Game Rules** before you start playing! 🏏")
-    st.session_state.seen_rules_hint = True
+# if "seen_rules_hint" not in st.session_state:
+#     st.info("💡 First time here? Click **Game Rules** before you start playing! 🏏")
+#     st.session_state.seen_rules_hint = True
 
 # Layout Start Game | Stop Game | Rules | Detection Feedback
 left_space, col1_btn, col2_btn, col3_btn, col4_btn, right_space = st.columns(6, gap="small", border=False)
@@ -412,7 +487,7 @@ if st.session_state.running:
             # cv2.rectangle(frame, (100, 20), (115, 35), (0, 255, 255), -1)  # Yellow flash (BGR)
 
             player_video_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
-            bot_num = np.random.randint(1, 11)
+            bot_num = np.random.randint(1, 2)
             bot_hand_image = Image.open(f"bot_hands/{bot_num}.png")
             bot_image_placeholder.image(bot_hand_image)
             time.sleep(0.5)
