@@ -1,0 +1,10 @@
+streamlit==1.47.1
+streamlit-webrtc
+av
+opencv-python
+mediapipe
+numpy
+Pillow
+scikit-learn
+joblib
+supabase
