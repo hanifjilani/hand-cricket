@@ -115,7 +115,6 @@ st.subheader("📤 Submit Feedback")
 if st.session_state.last_frame is not None:
     st.image(st.session_state.last_frame, channels="BGR", caption=f"Predicted: {st.session_state.last_prediction}")
     correct_label = st.selectbox("Correct Label (if wrong)", list(range(1, 11)))
-    comment = st.text_area("Additional comments (optional)")
 
     if st.button("Submit Feedback"):
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -132,7 +131,6 @@ if st.session_state.last_frame is not None:
             "timestamp": datetime.now().isoformat(),
             "predicted_label": st.session_state.last_prediction,
             "correct_label": correct_label,
-            "comment": comment,
             "image_filename": fname
         }).execute()
 
