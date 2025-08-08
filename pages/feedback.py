@@ -14,7 +14,7 @@ import os
 # Model & MediaPipe Loading
 # -------------------------
 current_dir = os.path.dirname(__file__)
-model_path = os.path.join(current_dir, '..', 'model', 'hand_cricket1.pkl')
+model_path = os.path.join(current_dir, '..', 'model', 'handcricket_feedback.pkl')
 MODEL_PATH = os.path.abspath(model_path)
 
 @st.cache_resource
@@ -84,7 +84,15 @@ class HandProcessor(VideoProcessorBase):
 # UI Layout
 # -------------------------
 st.title("🖐 Hand Cricket - Feedback")
-st.write("Live detection + feedback storage to Supabase")
+
+st.info(
+    "💡 **Help us improve!**\n\n"
+    "If the prediction looks wrong, please:\n"
+    "1. Click the Capture Frame button.\n"
+    "1. Scroll down and choose the **correct label** from the dropdown.\n"
+    "2. Click **Submit Feedback**.\n\n"
+    "Your input trains our AI to get smarter — and we really appreciate it! 🙌"
+)
 
 col1, col2 = st.columns([3, 1])
 
