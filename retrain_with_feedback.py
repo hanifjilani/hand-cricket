@@ -6,18 +6,18 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 from supabase import create_client
 import tempfile
-from datetime import datetime
 
 # === CONFIG ===
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 BUCKET_NAME = "feedback-images"
 MODEL_OUTPUT = "model/handcricket_feedback.pkl"
+BASE_DATASET_FILE = "data/handcricket_landmarks.npz"  # Preprocessed landmarks
 
 # === Connect to Supabase ===
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# === Load original dataset ===
+# === Helper: Extract landmarks from image ===
 def extract_landmarks(image):
     mp_hands = mp.solutions.hands
     with mp_hands.Hands(static_image_mode=True) as hands:
@@ -27,20 +27,18 @@ def extract_landmarks(image):
             return np.array([[lm.x, lm.y, lm.z] for lm in landmarks.landmark]).flatten()
     return None
 
-X, y = [], []
+# === Load preprocessed original dataset ===
+if not os.path.exists(BASE_DATASET_FILE):
+    raise FileNotFoundError(f"❌ Base dataset file not found: {BASE_DATASET_FILE}")
 
-print("Loading original dataset...")
-for label in os.listdir("dataset"):
-    for img_file in os.listdir(f"dataset/{label}"):
-        path = f"dataset/{label}/{img_file}"
-        image = cv2.imread(path)
-        features = extract_landmarks(image)
-        if features is not None:
-            X.append(features)
-            y.append(int(label))
+print(f"📂 Loading base dataset from {BASE_DATASET_FILE}...")
+data = np.load(BASE_DATASET_FILE)
+X, y = data["X"].tolist(), data["y"].tolist()
+
+print(f"✅ Loaded base dataset with {len(X)} samples")
 
 # === Load feedback from Supabase ===
-print("Fetching feedback records...")
+print("📡 Fetching feedback records from Supabase...")
 feedback_rows = supabase.table("feedback").select("*").execute().data
 
 for row in feedback_rows:
@@ -49,8 +47,7 @@ for row in feedback_rows:
     if not correct_label or not image_filename:
         continue
 
-    # Download feedback image
-    print(f"Downloading feedback image: {image_filename}")
+    print(f"⬇️  Downloading feedback image: {image_filename}")
     res = supabase.storage.from_(BUCKET_NAME).download(image_filename)
     if res:
         with tempfile.NamedTemporaryFile(delete=False) as tmp:
@@ -62,11 +59,13 @@ for row in feedback_rows:
             X.append(features)
             y.append(int(correct_label))
 
+print(f"📊 Total samples after adding feedback: {len(X)}")
+
 # === Train new model ===
-print(f"Training new model with {len(X)} samples...")
+print("🤖 Training new feedback model...")
 clf = RandomForestClassifier()
 clf.fit(X, y)
 
 os.makedirs("model", exist_ok=True)
 joblib.dump(clf, MODEL_OUTPUT)
-print(f"✅ New model saved at {MODEL_OUTPUT}")
+print(f"✅ New feedback model saved at {MODEL_OUTPUT}")
