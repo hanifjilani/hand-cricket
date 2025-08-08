@@ -1,9 +1,6 @@
 name: Retrain Model with Feedback
 
 on:
-  schedule:
-    # Every night at 2 UTC
-    - cron: "0 2 * * *"
   workflow_dispatch: # allows manual run
 
 permissions:
