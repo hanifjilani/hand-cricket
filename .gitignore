@@ -61,3 +61,6 @@ mediapipe_modules/
 *.gz
 *.tar
 *.zip
+
+# Reviewer File - only local
+reviewer.py
