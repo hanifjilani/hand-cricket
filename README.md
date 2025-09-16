@@ -15,7 +15,7 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 <li>License & Contact</li>
 </ul>
 
-## Features
+## ✨ Features
 
 🎮 Prototype gameplay for hand cricket, with gestures recognized in real-time.
 
