@@ -59,5 +59,10 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 3. Data & Processing
    <ul>
      <li><code>data_collect.py</code>: Gathers raw gesture data from webcam. Used to generate seed data for the ML model.</li>
-     <li><code>extract_landmark_from_dataset.py</code>: Extracts hand landmarks using MediaPipe Hands from dataset.</li>
+     <li><code>extract_landmark_from_dataset.py</code>: Extracts hand landmarks using MediaPipe Hands to create a npz file.</li>
    </ul>
+4. Model Lifecycle
+ <ul>
+      <li><code>train_model.py</code>: Trains baseline model.</li>
+      <li><code>retrain_with_feedback.py</code>: Integrates fresh user feedback to improve ML model accuracy.</li>
+ </ul>
