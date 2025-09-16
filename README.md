@@ -40,6 +40,14 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
      <li>Uses the ML model to classify gestures and manage scoring.</li>
    </ul>
 
+2. Feedback Generator `feedback_generator.py`
+   <ul>
+     <li>Collects user feedback when predictions are wrong.</li>
+     <li>Saves feedback into a Supabase database, where it can be reviewed and used to refine the model.</li>
+   </ul>
 
-
-
+3. Data & Processing
+   <ul>
+     <li>`data_collect.py:` gathers raw gesture data from my webcam. Used to generate seed data for the ML model.</li>
+     <li>Saves feedback into a Supabase database, where it can be reviewed and used to refine the model.</li>
+   </ul>
