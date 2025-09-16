@@ -71,3 +71,31 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
      <li><code>Github Actions bot</code>: Monitors Supabase updates.</li>
      <li><code>Github Actions bot</code>: Automatically retrains, validates, and redeploys updated models.</li>
    </ul>
+
+## ⚙️ Setup & Installation
+
+### 🔹 1. Clone the repo
+```bash
+git clone https://github.com/hanifjilani/hand-cricket.git
+cd hand-cricket
+```
+### 🔹 2. Create virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate   # macOS/Linux
+venv\Scripts\activate      # Windows
+```
+### 🔹 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+### 🔹 4. Add your Supabase Credentials
+```bash
+Create .streamlit/secrets.toml file and then add
+supabase_url = "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+supabase_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+### 🔹 5. Run the Application
+```bash
+streamlit run app.py
+```
