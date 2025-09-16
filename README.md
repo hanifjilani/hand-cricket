@@ -12,19 +12,6 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
  <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white"/>
 </div>
 
-## Table of Contents
-<ul>
-  <a href="#features"><li>Features</li></a>
-<li>Architecture & Workflow</li>
-<li>Key Components</li>
-<li>Setup & Installation</li>
-<li>Usage</li>
-<li>CI / Continuous Model Updating</li>
-<li>Roadmap</li>
-<li>Contributing</li>
-<li>License & Contact</li>
-</ul>
-
 ## ✨ Features
 
 🎮 Prototype gameplay for hand cricket, with gestures recognized in real-time using MediaPipe Hands.
