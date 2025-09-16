@@ -1,6 +1,6 @@
 # 🏏 Hand Cricket 
 
-An interactive, ML-driven prototype of a hand cricket game built with Python & Streamlit. This project demonstrates real-time gesture recognition, gameplay logic, and automated ML feedback loops. It also serves as the foundation for an upcoming mobile app and desktop game that will bring hand cricket to a wider audience.
+An interactive, **ML-driven prototype** of a hand cricket game built with **Python & Streamlit**. This project demonstrates real-time gesture recognition, gameplay logic, and **automated ML feedback loops**. It also serves as the foundation for an **upcoming mobile app and desktop game** that will bring hand cricket to a wider audience.
 
 ## Table of Contents
 <ul>
@@ -23,9 +23,9 @@ An interactive, ML-driven prototype of a hand cricket game built with Python & S
 
  <li>🖼️ Visual overlays (bot hands, game visuals) for immersive experience.</li>
 
- <li>📊 Data collection pipeline (data_collect.py) for gathering training data.</li>
+ <li>📊 Data collection pipeline (_data_collect.py_) for gathering training data.</li>
 
- <li>🧩 Landmark extraction & preprocessing (extract_landmark_from_dataset.py) to turn raw data into model-ready features.</li>
+ <li>🧩 Landmark extraction & preprocessing (_extract_landmark_from_dataset.py_) to turn raw data into model-ready features.</li>
 
  <li>🧠 ML model training & retraining (train_model.py, retrain_with_feedback.py) with feedback integration.</li>
 
