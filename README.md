@@ -12,14 +12,6 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
  <img src="https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white"/>
 </div>
 
- ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white)  
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)  
-![MediaPipe](https://img.shields.io/badge/MediaPipe-4285F4?logo=google&logoColor=white)  
-![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?logo=opencv&logoColor=white)  
-![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Model-green?logo=tensorflow&logoColor=white)  
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?logo=githubactions&logoColor=white)  
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white) 
-
 ## Table of Contents
 <ul>
   <a href="#features"><li>Features</li></a>
