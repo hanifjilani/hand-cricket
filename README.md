@@ -2,9 +2,7 @@
 
 An interactive, **ML-driven prototype** of a hand cricket game built with **Python & Streamlit**. This project demonstrates real-time gesture recognition, gameplay logic, and **automated ML feedback loops**. It also serves as the foundation for an **upcoming mobile app and desktop game** that will bring hand cricket to a wider audience.
 
-<div align="center">
- 
-</div>
+
  ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white)  
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)  
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-4285F4?logo=google&logoColor=white)  
