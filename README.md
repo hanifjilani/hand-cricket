@@ -68,6 +68,6 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
    </ul>
 5. CI/CD Automation
    <ul>
-     <li>**GitHub Actions bot** monitors Supabase updates.</li>
-     <li>**Github Actions bot ** automatically retrains, validates, and redeploys updated models.</li>
+     <li><b>GitHub Actions bot</b> monitors Supabase updates.</li>
+     <li><b>Github Actions bot</b> automatically retrains, validates, and redeploys updated models.</li>
    </ul>
