@@ -25,7 +25,7 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 📊 Data collection pipeline **_(data_collect.py)_** for gathering training data.
 
-🧩 Landmark extraction & preprocessing (extract_landmark_from_dataset.py) to turn raw data into model-ready features.
+🧩 Landmark extraction & preprocessing _(extract_landmark_from_dataset.py)_ to turn raw data into model-ready features.
 
 🧠 ML model training & retraining (train_model.py, retrain_with_feedback.py) with feedback integration.
 
