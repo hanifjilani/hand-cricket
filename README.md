@@ -99,3 +99,6 @@ supabase_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```bash
 streamlit run app.py
 ```
+<h2>📄 License</h2>
+MIT License © Hanif Jilani <br>
+Developed to empower learners, job seekers, and researchers with practical AI-driven tools.
