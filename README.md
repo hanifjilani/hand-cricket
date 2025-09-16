@@ -21,7 +21,7 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 🤖 Bot AI opponent that plays dynamically against the user.
 
-🖼️ Visual overlays (bot hands, game visuals) for immersive experience.
+🖼️ Visual overlays (bot hands, game visuals, game results) for immersive experience.
 
 📊 Data collection pipeline **_(data_collect.py)_** for gathering training data.
 
@@ -31,9 +31,6 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 🔄 Feedback loop: users can flag errors, which get stored and used to improve model accuracy.
 
-🌐 Streamlit UI with multiple pages for gameplay and feedback collection.
-
 ⚡ Automated retraining via **GitHub Actions**: feedback stored in Supabase triggers workflows to retrain and redeploy the model.
 
-📱 Prototype foundation for mobile app & desktop game – this repo is the experimental stage for scaling into production apps.
 
