@@ -33,4 +33,9 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 ⚡ Automated retraining via **GitHub Actions**: feedback stored in Supabase triggers workflows to retrain and redeploy the model.
 
+## 🏗️ Architecture & Workflow
+### Gameplay / UI (`app.py`)
 
+Runs the Streamlit app for live hand cricket.
+
+Uses the ML model to classify gestures and manage scoring.
