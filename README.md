@@ -16,24 +16,24 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 </ul>
 
 ## Features
-<ol>
-  <li>🎮 Prototype gameplay for hand cricket, with gestures recognized in real-time.</li>
 
- <li>🤖 Bot AI opponent that plays dynamically against the user.</li>
+🎮 Prototype gameplay for hand cricket, with gestures recognized in real-time.
 
- <li>🖼️ Visual overlays (bot hands, game visuals) for immersive experience.</li>
+🤖 Bot AI opponent that plays dynamically against the user.
 
- <li>📊 Data collection pipeline **_(data_collect.py)_** for gathering training data.</li>
+🖼️ Visual overlays (bot hands, game visuals) for immersive experience.
 
- <li>🧩 Landmark extraction & preprocessing (extract_landmark_from_dataset.py) to turn raw data into model-ready features.</li>
+📊 Data collection pipeline **_(data_collect.py)_** for gathering training data.
 
- <li>🧠 ML model training & retraining (train_model.py, retrain_with_feedback.py) with feedback integration.</li>
+🧩 Landmark extraction & preprocessing (extract_landmark_from_dataset.py) to turn raw data into model-ready features.
 
- <li>🔄 Feedback loop: users can flag errors, which get stored and used to improve model accuracy.</li>
+🧠 ML model training & retraining (train_model.py, retrain_with_feedback.py) with feedback integration.
 
- <li>🌐 Streamlit UI with multiple pages for gameplay and feedback collection.</li>
+🔄 Feedback loop: users can flag errors, which get stored and used to improve model accuracy.
 
- <li>⚡ Automated retraining via GitHub Actions: feedback stored in Supabase triggers workflows to retrain and redeploy the model.</li>
+🌐 Streamlit UI with multiple pages for gameplay and feedback collection.
 
- <li>📱 Prototype foundation for mobile app & desktop game – this repo is the experimental stage for scaling into production apps.</li>
-</ol>
+⚡ Automated retraining via GitHub Actions: feedback stored in Supabase triggers workflows to retrain and redeploy the model.
+
+📱 Prototype foundation for mobile app & desktop game – this repo is the experimental stage for scaling into production apps.
+
