@@ -23,18 +23,18 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 🖼️ Visual overlays (bot hands, game visuals, game results) for immersive experience.
 
-📊 Data collection pipeline **_(data_collect.py)_** for gathering training data.
+📊 Data collection pipeline `data_collect.py` for gathering training data.
 
-🧩 Landmark extraction & preprocessing **_(extract_landmark_from_dataset.py)_** to turn raw data into model-ready features.
+🧩 Landmark extraction & preprocessing `extract_landmark_from_dataset.py` to turn raw data into model-ready features.
 
-🧠 ML model training & retraining **_(train_model.py, retrain_with_feedback.py)_** with feedback integration.
+🧠 ML model training & retraining `train_model.py, retrain_with_feedback.py` with feedback integration.
 
 🔄 Feedback loop: users can flag errors, which get stored and used to improve model accuracy.
 
 ⚡ Automated retraining via **GitHub Actions**: feedback stored in Supabase triggers workflows to retrain and redeploy the model.
 
 ## 🏗️ Architecture & Workflow
-### Gameplay / UI (`app.py`)
+1. Gameplay / UI `app.py`
 
 Runs the Streamlit app for live hand cricket.
 
