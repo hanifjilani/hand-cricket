@@ -48,6 +48,6 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 3. Data & Processing
    <ul>
-     `data_collect.py:` <li>gathers raw gesture data from my webcam. Used to generate seed data for the ML model.</li>
+     <li><code>data_collect.py</code>: gathers raw gesture data from my webcam. Used to generate seed data for the ML model.</li>
      <li>Saves feedback into a Supabase database, where it can be reviewed and used to refine the model.</li>
    </ul>
