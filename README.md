@@ -17,7 +17,7 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 ## ✨ Features
 
-🎮 Prototype gameplay for hand cricket, with gestures recognized in real-time.
+🎮 Prototype gameplay for hand cricket, with gestures recognized in real-time using MediaPipe Hands.
 
 🤖 Bot AI opponent that plays dynamically against the user.
 
@@ -48,6 +48,6 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 3. Data & Processing
    <ul>
-     <li><code>data_collect.py</code>: gathers raw gesture data from my webcam. Used to generate seed data for the ML model.</li>
-     <li>Saves feedback into a Supabase database, where it can be reviewed and used to refine the model.</li>
+     <li><code>data_collect.py</code>: Gathers raw gesture data from webcam. Used to generate seed data for the ML model.</li>
+     <li><code>extract_landmark_from_dataset.py</code>: Extracts hand landmarks using MediaPipe Hands from dataset.</li>
    </ul>
