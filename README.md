@@ -35,7 +35,11 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 ## 🏗️ Architecture & Workflow
 1. Gameplay / UI `app.py`
+   <ul>
+     <li>Runs the Streamlit app for live hand cricket.</li>
+     <li>Uses the ML model to classify gestures and manage scoring.</li>
+   </ul>
 
-Runs the Streamlit app for live hand cricket.
 
-Uses the ML model to classify gestures and manage scoring.
+
+
