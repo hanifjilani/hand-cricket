@@ -13,7 +13,9 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
 
 
 ## 🎬 Demo
-https://github.com/user-attachments/assets/74930745-3bfd-43b9-a63c-5209b698607f
+https://github.com/user-attachments/assets/0208ff88-a8ed-47cf-853c-98819a112fff
+
+
 
 ## ✨ Features
 
