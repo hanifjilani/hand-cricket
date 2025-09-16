@@ -66,3 +66,8 @@ An interactive, **ML-driven prototype** of a hand cricket game built with **Pyth
         <li><code>train_model.py</code>: Trains baseline model.</li>
         <li><code>retrain_with_feedback.py</code>: Integrates fresh user feedback to improve ML model accuracy.</li>
    </ul>
+5. CI/CD Automation
+   <ul>
+     <li>GitHub Actions bot monitors Supabase updates.</li>
+     <li>Automatically retrains, validates, and redeploys updated models.</li>
+   </ul>
